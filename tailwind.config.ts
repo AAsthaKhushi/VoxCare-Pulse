@@ -81,6 +81,17 @@ export default {
           busy: "rgb(239 68 68)",
           offline: "rgb(156 163 175)",
         },
+        sentiment: {
+          happy: "rgb(16 185 129)",
+          neutral: "rgb(59 130 246)",
+          concerned: "rgb(245 158 11)",
+          frustrated: "rgb(249 115 22)",
+          urgent: "rgb(239 68 68)",
+        },
+        vw: {
+          blue: "#001E50",
+          accent: "#00B4D8",
+        },
       },
       fontFamily: {
         sans: ["var(--font-sans)"],
