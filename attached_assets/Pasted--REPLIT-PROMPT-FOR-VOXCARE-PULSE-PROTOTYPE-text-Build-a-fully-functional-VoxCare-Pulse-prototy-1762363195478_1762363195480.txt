@@ -1,0 +1,868 @@
+
+🚀 REPLIT PROMPT FOR VOXCARE PULSE PROTOTYPE
+text
+Build a fully functional VoxCare Pulse prototype - an AI-powered, emotion-aware predictive after-sales support platform for Volkswagen. This is a comprehensive multi-channel customer service solution with sentiment analysis and predictive vehicle maintenance.
+
+⚠️ CRITICAL REQUIREMENTS:
+- DO NOT use any Replit-specific dependencies or libraries
+- Use only standard npm packages that work in any Node.js environment
+- The application must be fully portable and deployable outside Replit
+- All features must be functional, not placeholder/TODO
+
+---
+
+## 📋 TECH STACK (Simple but Powerful for Prototype)
+
+### Frontend:
+- **React.js 18+** with Vite for fast development
+- **Tailwind CSS** for responsive UI
+- **Lucide React** for icons
+- **Recharts** for data visualization (dashboards)
+- **React Router** for navigation
+
+### Backend:
+- **Node.js + Express.js** for API server
+- **Socket.io** for real-time features
+- **SQLite3** (file-based) for database (easy prototype deployment)
+- **JSON Web Tokens (JWT)** for auth
+
+### AI/ML Simulation:
+- **Sentiment.js** or **compromise** for basic NLP
+- **Mock AI responses** with rule-based logic for sentiment detection
+- **Predefined response templates** for different emotion states
+- **Random Forest simulation** using basic probability models for predictive maintenance
+
+### Integrations (Simulated):
+- **Mock WhatsApp interface** (UI simulation)
+- **Mock OBD-II data generator** for vehicle diagnostics
+- **Mock notification system** (visual notifications instead of actual SMS/email)
+
+---
+
+## 🏗️ PROJECT STRUCTURE
+
+
+voxcare-pulse/
+├── client/ # React frontend
+│ ├── src/
+│ │ ├── components/
+│ │ │ ├── customer/ # Customer-facing interfaces
+│ │ │ │ ├── ChatInterface.jsx # Multi-channel chat
+│ │ │ │ ├── VehicleHealthDashboard.jsx
+│ │ │ │ ├── BookingSystem.jsx
+│ │ │ │ └── MaintenanceAlerts.jsx
+│ │ │ ├── admin/ # Service center admin
+│ │ │ │ ├── AdminDashboard.jsx
+│ │ │ │ ├── FleetHealthOverview.jsx
+│ │ │ │ ├── SentimentHeatmap.jsx
+│ │ │ │ ├── LiveChatQueue.jsx
+│ │ │ │ └── RevenueInsights.jsx
+│ │ │ ├── shared/
+│ │ │ │ ├── SentimentIndicator.jsx
+│ │ │ │ ├── VehicleHealthCard.jsx
+│ │ │ │ └── NotificationToast.jsx
+│ │ ├── pages/
+│ │ │ ├── CustomerApp.jsx
+│ │ │ ├── ServiceCenterDashboard.jsx
+│ │ │ └── LandingPage.jsx
+│ │ ├── services/
+│ │ │ ├── api.js # API client
+│ │ │ ├── sentimentAnalyzer.js # Frontend sentiment utilities
+│ │ │ └── socket.js # Socket.io client
+│ │ ├── utils/
+│ │ │ ├── emotionDetector.js
+│ │ │ └── constants.js
+│ │ ├── App.jsx
+│ │ └── main.jsx
+│ ├── index.html
+│ ├── tailwind.config.js
+│ └── vite.config.js
+│
+├── server/ # Node.js backend
+│ ├── src/
+│ │ ├── controllers/
+│ │ │ ├── chatController.js
+│ │ │ ├── vehicleController.js
+│ │ │ ├── bookingController.js
+│ │ │ └── analyticsController.js
+│ │ ├── services/
+│ │ │ ├── sentimentAnalysis.js # Core sentiment engine
+│ │ │ ├── predictiveMaintenance.js # Predictive ML simulation
+│ │ │ ├── knowledgeBase.js # RAG simulation
+│ │ │ ├── escalationRouter.js # Smart routing logic
+│ │ │ └── obdDataSimulator.js # Mock vehicle data
+│ │ ├── models/
+│ │ │ ├── Customer.js
+│ │ │ ├── Vehicle.js
+│ │ │ ├── Conversation.js
+│ │ │ └── ServiceBooking.js
+│ │ ├── routes/
+│ │ │ ├── chat.js
+│ │ │ ├── vehicle.js
+│ │ │ ├── booking.js
+│ │ │ └── admin.js
+│ │ ├── middleware/
+│ │ │ ├── auth.js
+│ │ │ └── errorHandler.js
+│ │ ├── database/
+│ │ │ ├── init.js # SQLite initialization
+│ │ │ └── seed.js # Sample data
+│ │ ├── socket/
+│ │ │ └── chatSocket.js # Real-time chat handling
+│ │ ├── config/
+│ │ │ └── index.js
+│ │ └── server.js
+│ └── package.json
+│
+├── shared/
+│ └── constants.js # Shared between client/server
+│
+├── package.json # Root package.json
+└── README.md
+text
+
+---
+
+## 🎯 CORE FEATURES TO IMPLEMENT
+
+### 1. MULTI-CHANNEL AI SUPPORT
+**Customer Chat Interface:**
+- Real-time messaging interface (looks like WhatsApp)
+- Support for text input
+- Message history with timestamps
+- Typing indicators
+- Quick action buttons (Service Booking, Track Service, General Query)
+- Multi-language support toggle (English, Hindi)
+
+**Implementation Details:**
+- Use Socket.io for real-time bidirectional communication
+- Store conversations in SQLite with customer_id, message, timestamp, sentiment_score
+- Auto-response system with 200-500ms delay to simulate AI processing
+- Context-aware responses based on conversation history
+
+### 2. REAL-TIME SENTIMENT ANALYSIS ENGINE
+
+**Sentiment Detection Logic:**
+
+// Implement multi-level sentiment scoring
+Emotions: {
+HAPPY: { score: 0.8-1.0, color: 'green', keywords: ['great', 'thanks', 'perfect', 'excellent'] },
+NEUTRAL: { score: 0.4-0.79, color: 'blue', keywords: ['okay', 'fine', 'understood'] },
+CONCERNED: { score: 0.2-0.39, color: 'yellow', keywords: ['worried', 'issue', 'problem'] },
+FRUSTRATED: { score: 0-0.19, color: 'orange', keywords: ['frustrated', 'angry', 'terrible'] },
+URGENT: { score: <0, color: 'red', keywords: ['urgent', 'emergency', 'immediately', 'ASAP'] }
+}
+text
+
+**Features:**
+- Real-time emotion detection on every message
+- Visual sentiment indicators (colored dots/badges)
+- Sentiment score tracking over conversation
+- Automatic tone adjustment in AI responses
+- Escalation trigger when frustration detected
+
+**Implementation:**
+- Use keyword matching + punctuation analysis (!!!, ???)
+- ALL CAPS detection for urgency
+- Negative phrase patterns
+- Response time tracking (delayed replies = potential frustration)
+
+### 3. INTELLIGENT ESCALATION SYSTEM
+
+**Escalation Triggers:**
+- Sentiment score drops below 0.2 (frustrated)
+- Keywords: "speak to human", "manager", "not helping"
+- More than 3 unresolved messages in a row
+- Critical vehicle alerts (brake failure, engine warning)
+
+**Escalation Flow:**
+- Detect escalation trigger
+- Notify customer: "I understand this is important. Connecting you to a specialist right away."
+- Add conversation to admin queue with priority flag
+- Highlight in service center dashboard
+- Assign to available agent with sentiment context
+
+**Implementation:**
+- Priority queue data structure
+- WebSocket notification to admin dashboard
+- Agent availability status tracking
+- Handoff with full conversation history
+
+### 4. PREDICTIVE VEHICLE HEALTH MONITORING
+
+**Mock OBD-II Data Generator:**
+
+Vehicle Parameters to Monitor:
+Battery Health: 0-100%
+Engine Oil Level: Good/Low/Critical
+Brake Pad Thickness: mm (with wear prediction)
+Tire Pressure: PSI per tire
+Engine Temperature: Celsius
+Coolant Level: Good/Low
+Mileage: km
+Last Service Date
+Driving Patterns: City/Highway ratio
+text
+
+**Predictive Maintenance Algorithm:**
+
+Prediction Logic:
+Calculate days since last service
+Analyze mileage patterns
+Monitor sensor thresholds
+Apply wear-rate formulas:
+Brake pads: (thickness - safe_threshold) / daily_wear_rate
+Oil: mileage_since_change / recommended_interval
+Battery: age * degradation_factor
+Generate alerts 7-14 days before predicted failure
+text
+
+**Vehicle Health Dashboard:**
+- Visual health cards for each component
+- Color-coded status indicators
+- "Next Service Recommended" countdown
+- Proactive alert notifications
+- One-click booking from alerts
+
+### 5. PROACTIVE MAINTENANCE ALERTS
+
+**Alert System:**
+- Background monitoring every 6 hours (simulated)
+- Automatic notification when threshold met
+- Multi-channel delivery (in-app, mock WhatsApp, email simulation)
+- Alert Types:
+  - Routine Maintenance Due (7 days)
+  - Component Wear Warning (14 days)
+  - Critical Issue Detected (immediate)
+  - Service Reminder (based on mileage)
+
+**Notification Content:**
+
+Alert Template: {
+title: "Brake Pad Inspection Recommended",
+severity: "medium",
+message: "Your brake pads are at 4mm thickness. We recommend inspection within 10 days.",
+action: "Book Service Now",
+estimated_cost: "₹2,500 - ₹4,000",
+nearby_centers: [...],
+predicted_failure_date: "2025-11-18"
+}
+text
+
+### 6. CONVERSATIONAL BOOKING SYSTEM
+
+**Natural Language Booking Flow:**
+
+Customer: "I want to book a service"
+AI: "I'd be happy to help! What type of service do you need?"
+[Quick Replies: Routine Maintenance | Specific Issue | Inspection]
+Customer: "My car feels shaky"
+AI: (Sentiment: Concerned detected ⚠️)
+"I understand your concern. Let me help you quickly.
+When did you first notice the shaking?"
+Customer: "Yesterday while driving"
+AI: "Got it. I recommend a suspension and alignment check.
+Would you like to book at a nearby service center?
+text
+📍 VW Service Connaught Place (4.2 km)
+Available: Tomorrow 10 AM, 2 PM, 4 PM
+
+📍 VW Service Nehru Place (6.8 km)  
+Available: Today 3 PM, Tomorrow 11 AM"
+
+Customer: "Tomorrow 10 AM at Connaught Place"
+AI: "Perfect! ✓ Booking confirmed for Nov 6, 10:00 AM
+text
+Service: Suspension Check + Wheel Alignment
+Center: VW Connaught Place
+Estimated Time: 1.5 hours
+Estimated Cost: ₹3,500 - ₹5,000
+
+Booking ID: #VW-2511-0487
+You'll receive a reminder 1 day before."
+
+text
+
+**Implementation:**
+- Intent recognition (booking, query, complaint)
+- Entity extraction (date, time, service type)
+- Service center database with availability
+- Booking confirmation system
+- Calendar integration simulation
+
+### 7. DYNAMIC KNOWLEDGE BASE (RAG Simulation)
+
+**Knowledge Base Structure:**
+
+FAQ Categories: {
+vehicle_issues: {
+"engine won't start": {
+causes: [...],
+quick_fixes: [...],
+when_to_visit: "..."
+}
+},
+maintenance: {
+"oil change frequency": {...}
+},
+warranty: {...},
+parts: {...}
+}
+text
+
+**RAG Implementation (Simplified):**
+- Keyword-based retrieval
+- Fuzzy matching for similar queries
+- Contextual answer generation
+- Source attribution (manual page references)
+
+### 8. SERVICE CENTER ADMIN DASHBOARD
+
+**Real-Time Metrics Display:**
+
+**Today's Metrics Section:**
+
+┌─────────────────────────────────────┐
+│ Incoming Chats: 18 (75% auto-resolved) │
+│ Escalations: 3 │
+│ Avg Response Time: 2.1 min │
+│ Customer Satisfaction: ⭐ 4.6/5.0 │
+└─────────────────────────────────────┘
+text
+
+**Fleet Health Overview:**
+- Critical Issues: 3 vehicles (with VIN/owner)
+- Alerts Pending: 87 vehicles need attention
+- Healthy Vehicles: 542
+- Color-coded vehicle grid/list
+
+**Live Chat Queue:**
+- Active conversations with sentiment indicators
+- Agent assignment interface
+- Priority sorting (urgent → concerned → neutral)
+- One-click takeover from AI
+
+**Sentiment Heatmap:**
+- Time-series chart showing sentiment trends
+- Spike detection for negative events
+- Department/issue-wise breakdown
+
+**Revenue Insights:**
+- Services booked today/week/month
+- Predicted revenue from proactive alerts
+- Cost savings from prevented breakdowns
+
+### 9. CONTINUOUS LEARNING FEEDBACK LOOP
+
+**Post-Interaction Feedback:**
+- Star rating (1-5)
+- "Was this helpful?" Yes/No
+- Optional comment
+- NPS score tracking
+
+**Data Collection:**
+
+Interaction Log: {
+conversation_id,
+sentiment_progression: [0.8, 0.6, 0.9], // over time
+resolution_method: 'ai' | 'human' | 'hybrid',
+resolution_time: minutes,
+customer_satisfaction: 1-5,
+issue_category,
+ai_accuracy: boolean
+}
+text
+
+**Learning Simulation:**
+- Track frequently asked questions
+- Identify common escalation triggers
+- Improve response templates based on feedback
+- Display "AI Improvement" metrics in admin panel
+
+### 10. MULTI-LANGUAGE SUPPORT
+
+**Supported Languages:**
+- English (default)
+- Hindi (Devanagari script)
+
+**Implementation:**
+- Language toggle in UI
+- Translation dictionary for common phrases
+- AI responses in selected language
+- Fallback to English for complex queries
+
+---
+
+## 🔄 COMPLETE SYSTEM WORKFLOW
+
+### CUSTOMER INTERACTION PATH (Main Flow)
+
+
+Customer Initiates Contact
+├─ Channel: WhatsApp UI / Mobile App / Web Chat
+└─ Entry captured by API Gateway
+Message Processing (Parallel)
+├─ Sentiment Analysis Engine
+│ ├─ Analyze text for emotion keywords
+│ ├─ Detect urgency (!!!, CAPS, "urgent")
+│ ├─ Calculate sentiment score (0-1)
+│ └─ Assign emotion label
+│
+├─ Context Retrieval
+│ ├─ Fetch customer history from DB
+│ ├─ Get vehicle health status
+│ ├─ Load past conversations
+│ └─ Check active service bookings
+│
+└─ Intent Classification
+├─ Booking intent
+├─ Query/FAQ intent
+├─ Complaint intent
+└─ Maintenance alert acknowledgment
+Decision Engine (Core Logic)
+├─ IF sentiment = FRUSTRATED or URGENT
+│ └─ Trigger Escalation → Route to human agent
+│
+├─ ELIF intent = booking
+│ └─ Start conversational booking flow
+│
+├─ ELIF intent = query
+│ ├─ Search knowledge base (RAG)
+│ ├─ Generate answer from FAQ
+│ └─ Send response
+│
+└─ ELSE
+└─ General AI response with empathy
+Response Generation
+├─ Adapt tone based on sentiment
+│ ├─ Happy: Friendly, casual
+│ ├─ Neutral: Professional, clear
+│ ├─ Concerned: Empathetic, reassuring
+│ └─ Frustrated: Apologetic, solution-focused
+│
+├─ Include relevant quick actions
+└─ Multi-channel delivery (Socket.io)
+Outcome Handling
+├─ IF resolved by AI
+│ ├─ Close ticket
+│ ├─ Request feedback
+│ └─ Log interaction for ML training
+│
+├─ ELIF escalated
+│ ├─ Notify admin dashboard
+│ ├─ Add to priority queue
+│ ├─ Assign to available agent
+│ └─ Transfer conversation context
+│
+└─ ELIF partial resolution
+└─ Continue conversation thread
+text
+
+### PREDICTIVE MAINTENANCE WORKFLOW
+
+
+Continuous Vehicle Monitoring
+├─ OBD-II data transmission (simulated every 6 hours)
+├─ Collect: mileage, sensor readings, error codes
+└─ Store in vehicle_health_logs table
+ML Predictive Models Analyze Data
+├─ Load historical service patterns
+├─ Apply wear-rate algorithms
+│ ├─ Brake pad formula: days_until_failure = (current_thickness - 2mm) / 0.1mm_per_day
+│ ├─ Oil change: due_date = last_change + 10000km OR 180 days
+│ └─ Battery: health = 100 - (age_in_months * 1.5)
+│
+└─ Calculate failure probability
+Prediction Threshold Check
+├─ IF probability > 70% AND days_until_failure < 14
+│ └─ Trigger Proactive Alert
+│
+└─ ELSE continue monitoring
+Proactive Alert Triggered
+├─ Generate personalized message
+├─ Include:
+│ ├─ What component needs attention
+│ ├─ Why (current status vs threshold)
+│ ├─ When (recommended timeline)
+│ ├─ Where (nearby service centers)
+│ └─ How much (estimated cost range)
+│
+└─ Determine delivery channel (user preference)
+Customer Receives Notification
+├─ In-app notification
+├─ WhatsApp message (UI simulation)
+├─ Email (visual representation)
+└─ Push notification badge
+Customer Action
+├─ Book Immediately → Start booking flow
+├─ Snooze (Remind in 3 days)
+└─ Dismiss → Log decision, re-alert if critical
+Service Booking Confirmed
+├─ Notify service center
+├─ Add to service queue
+├─ Send confirmation to customer
+└─ Schedule reminder notification
+Service Completed
+├─ Update vehicle health status
+├─ Reset component tracking
+├─ Request service feedback
+└─ Feed data back to ML model
+text
+
+---
+
+## 💾 DATABASE SCHEMA (SQLite)
+
+
+-- Customers
+CREATE TABLE customers (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+name TEXT NOT NULL,
+email TEXT UNIQUE,
+phone TEXT,
+language_preference TEXT DEFAULT 'en',
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+-- Vehicles
+CREATE TABLE vehicles (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+customer_id INTEGER,
+vin TEXT UNIQUE,
+model TEXT,
+year INTEGER,
+mileage INTEGER,
+last_service_date DATE,
+FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+-- Vehicle Health Logs
+CREATE TABLE vehicle_health_logs (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+vehicle_id INTEGER,
+battery_health INTEGER, -- 0-100%
+engine_oil TEXT, -- Good/Low/Critical
+brake_pad_thickness REAL, -- mm
+tire_pressure_fl REAL, -- PSI
+tire_pressure_fr REAL,
+tire_pressure_rl REAL,
+tire_pressure_rr REAL,
+engine_temp REAL, -- Celsius
+coolant_level TEXT,
+recorded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
+);
+-- Conversations
+CREATE TABLE conversations (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+customer_id INTEGER,
+channel TEXT, -- whatsapp/web/app
+status TEXT, -- active/resolved/escalated
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+closed_at DATETIME,
+FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+-- Messages
+CREATE TABLE messages (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+conversation_id INTEGER,
+sender TEXT, -- customer/ai/agent
+message TEXT,
+sentiment_score REAL, -- 0-1
+emotion_label TEXT, -- happy/neutral/concerned/frustrated/urgent
+timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (conversation_id) REFERENCES conversations(id)
+);
+-- Maintenance Alerts
+CREATE TABLE maintenance_alerts (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+vehicle_id INTEGER,
+alert_type TEXT, -- routine/wear_warning/critical
+component TEXT, -- brake_pads/oil/battery
+message TEXT,
+severity TEXT, -- low/medium/high
+predicted_failure_date DATE,
+status TEXT, -- pending/acknowledged/booked/dismissed
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
+);
+-- Service Bookings
+CREATE TABLE service_bookings (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+customer_id INTEGER,
+vehicle_id INTEGER,
+booking_id TEXT UNIQUE,
+service_type TEXT,
+service_center TEXT,
+scheduled_date DATE,
+scheduled_time TIME,
+status TEXT, -- confirmed/completed/cancelled
+estimated_cost_min INTEGER,
+estimated_cost_max INTEGER,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (customer_id) REFERENCES customers(id),
+FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
+);
+-- Feedback
+CREATE TABLE feedback (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+conversation_id INTEGER,
+rating INTEGER, -- 1-5 stars
+was_helpful BOOLEAN,
+comment TEXT,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (conversation_id) REFERENCES conversations(id)
+);
+-- Knowledge Base
+CREATE TABLE knowledge_base (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+category TEXT,
+question TEXT,
+answer TEXT,
+keywords TEXT, -- comma-separated for search
+source TEXT -- manual page reference
+);
+text
+
+---
+
+## 🎨 UI/UX REQUIREMENTS
+
+### Design System:
+- **Color Palette:**
+  - Primary: Volkswagen Blue (#001E50)
+  - Accent: Electric Blue (#00B4D8)
+  - Success: Green (#10B981)
+  - Warning: Orange (#F59E0B)
+  - Error: Red (#EF4444)
+  - Sentiment Colors:
+    - Happy: #10B981 (Green)
+    - Neutral: #3B82F6 (Blue)
+    - Concerned: #F59E0B (Yellow)
+    - Frustrated: #F97316 (Orange)
+    - Urgent: #EF4444 (Red)
+
+- **Typography:**
+  - Font: Inter or System Default
+  - Sizes: text-sm, text-base, text-lg, text-xl, text-2xl
+
+- **Components:**
+  - Cards with subtle shadows
+  - Rounded corners (8px)
+  - Smooth transitions (200ms)
+  - Responsive grid layouts
+
+### Customer App Screens:
+
+**1. Chat Interface (WhatsApp-style)**
+- Header: VoxCare Pulse logo + online status
+- Message bubbles:
+  - Customer messages: Right-aligned, blue background
+  - AI messages: Left-aligned, gray background
+  - Agent messages: Left-aligned, green border
+- Sentiment indicator dot next to each message
+- Quick reply chips at bottom
+- Input field with send button
+- Typing indicator animation
+
+**2. Vehicle Health Dashboard**
+- Top card: Overall health score (0-100) with gauge chart
+- Component status cards (grid):
+  - Battery: Percentage + icon
+  - Engine Oil: Status + icon
+  - Brake Pads: Thickness + wear bar
+  - Tire Pressure: 4-tire visual
+- "Next Service Recommended" countdown card
+- "Book Appointment" prominent button
+- Recent alerts list
+
+**3. Booking Interface**
+- Service type selection (cards)
+- Date picker (calendar view)
+- Time slot selection (chips)
+- Service center selector (map + list)
+- Cost estimate display
+- Confirmation summary
+- Booking confirmation screen with ID
+
+### Admin Dashboard Screens:
+
+**1. Main Dashboard**
+- KPI cards at top:
+  - Incoming Chats (with auto-resolve %)
+  - Active Escalations
+  - Avg Response Time
+  - Customer Satisfaction (star rating)
+- Fleet health overview section
+- Live chat queue (sidebar)
+- Sentiment trend chart
+- Revenue insights chart
+
+**2. Fleet Health Overview**
+- Search/filter bar
+- Vehicle list with status indicators:
+  - Green dot: Healthy
+  - Yellow: Warning
+  - Red: Critical
+- Click to expand vehicle details
+- Bulk alert actions
+
+**3. Live Chat Queue**
+- List of active conversations
+- Each item shows:
+  - Customer name
+  - Current sentiment (colored dot)
+  - Last message preview
+  - Time since last message
+  - "Take Over" button
+- Sort by: Priority, Time, Sentiment
+
+**4. Sentiment Heatmap**
+- Time-series line chart
+- Color-coded sentiment zones
+- Drill-down to specific time periods
+- Export data option
+
+---
+
+## 🔐 AUTHENTICATION & SECURITY
+
+**Simple JWT Implementation:**
+- Customer login: email/phone + OTP simulation
+- Admin login: username + password
+- JWT token stored in localStorage (prototype acceptable)
+- Protected routes with auth middleware
+- Session timeout: 24 hours
+
+**Data Privacy:**
+- No real customer data (use faker.js for seed data)
+- All sensitive fields marked clearly
+- GDPR compliance note in UI
+
+---
+
+## 📊 SAMPLE DATA (Seed Database)
+
+Generate realistic sample data:
+- **10 customers** with varied profiles
+- **10 vehicles** with different health statuses
+- **50+ knowledge base entries** (VW FAQs)
+- **20 past conversations** with different sentiment patterns
+- **15 active maintenance alerts**
+- **Mock conversation history** for testing chat features
+
+Use **faker.js** or manual fixtures for:
+- Customer names, emails, phone numbers
+- Vehicle VINs, models (Polo, Vento, Tiguan, Virtus)
+- Service center locations (Delhi NCR, Mumbai, Bangalore)
+- Chat message templates
+
+---
+
+## ⚡ KEY FUNCTIONAL REQUIREMENTS
+
+### Real-Time Features:
+1. Bi-directional chat with <500ms latency
+2. Live sentiment score updates
+3. Admin dashboard auto-refresh every 10 seconds
+4. Notification badges update in real-time
+
+### Responsive Design:
+- Mobile-first approach
+- Works on 360px to 1920px screens
+- Touch-friendly buttons (min 44px)
+- Readable text sizes
+
+### Performance:
+- Page load <2 seconds
+- Smooth animations (60fps)
+- Lazy loading for large lists
+- Optimistic UI updates
+
+### Error Handling:
+- Graceful degradation for API failures
+- User-friendly error messages
+- Retry mechanisms for failed requests
+- Loading states for all async operations
+
+---
+
+## 🚀 DEPLOYMENT INSTRUCTIONS (for README)
+
+
+Installation
+npm install
+Run in development
+npm run dev # Starts both client (Vite) and server (Node.js)
+Build for production
+npm run build
+The app will be available at:
+Frontend: http://localhost:5173
+Backend API: http://localhost:3000
+text
+
+**Environment Variables (.env):**
+
+PORT=3000
+JWT_SECRET=your_secret_key_here
+DATABASE_PATH=./database.sqlite
+NODE_ENV=development
+text
+
+---
+
+## 📝 ADDITIONAL NOTES
+
+1. **No External AI APIs**: Since this is a prototype, implement sentiment analysis using simple rule-based logic and keyword matching instead of calling OpenAI/Gemini APIs.
+
+2. **Offline-First**: The prototype should work without internet for core features (chat, dashboard) since all data is local SQLite.
+
+3. **Demo Mode**: Add a "Simulate Vehicle Alert" button in admin panel to trigger predictive maintenance flow for demonstration.
+
+4. **Data Visualization**: Use simple charts (line, bar, pie) from Recharts library for all analytics.
+
+5. **Documentation**: Include detailed README with:
+   - Feature list
+   - Architecture diagram (ASCII art acceptable)
+   - API endpoints documentation
+   - Setup instructions
+   - Demo credentials
+   - Screenshots/GIFs of key flows
+
+6. **Code Quality**:
+   - Clean, commented code
+   - Consistent naming conventions
+   - Modular components
+   - Separation of concerns
+   - Error boundaries in React
+
+7. **Testing Data**: Pre-populate database with scenarios:
+   - Frustrated customer conversation
+   - Happy customer booking flow
+   - Vehicle with critical alert
+   - Vehicle due for routine maintenance
+
+---
+
+## 🎯 SUCCESS CRITERIA
+
+The prototype is complete when:
+✅ Customer can chat with AI and receive contextual responses
+✅ Sentiment is detected and displayed in real-time
+✅ Frustrated conversations automatically escalate
+✅ Vehicle health dashboard shows component statuses
+✅ Predictive alerts are generated for vehicles needing service
+✅ Customers can book services through conversation
+✅ Admin can view fleet health and sentiment analytics
+✅ Admin can take over AI conversations
+✅ Multi-language toggle works (English/Hindi)
+✅ All UI is responsive and polished
+✅ No console errors in production build
+✅ README has clear setup and demo instructions
+
+---
+
+BUILD THIS AS A PRODUCTION-READY PROTOTYPE WITH ATTENTION TO DETAIL. EVERY FEATURE SHOULD BE FUNCTIONAL, NOT PLACEHOLDER. MAKE IT IMPRESSIVE AND DEMO-READY.
+
+
+
+
+
