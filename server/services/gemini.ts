@@ -34,7 +34,7 @@ Respond with JSON in this exact format:
   "confidence": <number between 0 and 1>
 }`;
 
-    const response = await ai.models.generateContent({
+    const result = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       config: {
         systemInstruction: systemPrompt,
@@ -57,7 +57,7 @@ Respond with JSON in this exact format:
       ],
     });
 
-    const rawJson = response.text;
+    const rawJson = result.response.text();
     if (rawJson) {
       const data: SentimentAnalysis = JSON.parse(rawJson);
       return data;
@@ -104,7 +104,7 @@ Guidelines:
 Conversation history:
 ${conversationContext}`;
 
-    const response = await ai.models.generateContent({
+    const result = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       config: {
         systemInstruction: systemPrompt,
@@ -117,7 +117,7 @@ ${conversationContext}`;
       ],
     });
 
-    return response.text || "I'm here to help! How can I assist you today?";
+    return result.response.text() || "I'm here to help! How can I assist you today?";
   } catch (error) {
     console.error("Gemini response generation error:", error);
     return getFallbackResponse(sentiment.emotion, language);
@@ -148,7 +148,7 @@ Respond with JSON:
   "center": "<string or null>"
 }`;
 
-    const response = await ai.models.generateContent({
+    const result = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       config: {
         systemInstruction: systemPrompt,
@@ -173,7 +173,7 @@ Respond with JSON:
       ],
     });
 
-    const rawJson = response.text;
+    const rawJson = result.response.text();
     if (rawJson) {
       return JSON.parse(rawJson);
     }

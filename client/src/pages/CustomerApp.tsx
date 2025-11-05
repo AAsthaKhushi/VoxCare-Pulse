@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChatInterface } from "@/components/customer/ChatInterface";
 import { VehicleHealthDashboard } from "@/components/customer/VehicleHealthDashboard";
@@ -7,6 +7,7 @@ import { MaintenanceAlerts } from "@/components/customer/MaintenanceAlerts";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
+import { useWebSocket } from "@/hooks/useWebSocket";
 import { type Message, type MaintenanceAlert, type VehicleHealthLog } from "@shared/schema";
 import { LANGUAGES } from "@shared/constants";
 import { MessageSquare, Car, Calendar, Bell } from "lucide-react";
@@ -21,10 +22,26 @@ export default function CustomerApp() {
   const vehicleId = 1;
   const conversationId = 1;
 
-  // Fetch messages
-  const { data: messages = [], isLoading: messagesLoading } = useQuery<Message[]>({
+  // WebSocket for real-time chat
+  const { 
+    messages: wsMessages, 
+    setMessages: setWsMessages, 
+    sendMessage: wsSendMessage, 
+    isConnected,
+    isTyping 
+  } = useWebSocket(conversationId);
+
+  // Fetch initial messages from API
+  const { data: initialMessages = [] } = useQuery<Message[]>({
     queryKey: ["/api/messages", conversationId],
   });
+
+  // Sync initial messages with WebSocket state
+  useEffect(() => {
+    if (initialMessages.length > 0 && wsMessages.length === 0) {
+      setWsMessages(initialMessages);
+    }
+  }, [initialMessages, wsMessages.length, setWsMessages]);
 
   // Fetch vehicle health
   const { data: healthLog } = useQuery<VehicleHealthLog>({
@@ -34,20 +51,6 @@ export default function CustomerApp() {
   // Fetch alerts
   const { data: alerts = [] } = useQuery<MaintenanceAlert[]>({
     queryKey: ["/api/alerts", vehicleId],
-  });
-
-  // Send message mutation
-  const sendMessageMutation = useMutation({
-    mutationFn: async (message: string) => {
-      return apiRequest("POST", "/api/messages", {
-        conversationId,
-        message,
-        language,
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages", conversationId] });
-    },
   });
 
   // Book service mutation
@@ -99,7 +102,7 @@ export default function CustomerApp() {
   });
 
   const handleSendMessage = (message: string) => {
-    sendMessageMutation.mutate(message);
+    wsSendMessage(message, language);
   };
 
   const handleBookingComplete = (booking: any) => {
@@ -146,8 +149,8 @@ export default function CustomerApp() {
             <ChatInterface
               conversationId={conversationId}
               onSendMessage={handleSendMessage}
-              messages={messages}
-              isTyping={sendMessageMutation.isPending}
+              messages={wsMessages}
+              isTyping={isTyping}
               currentLanguage={language}
               onLanguageChange={setLanguage}
             />
