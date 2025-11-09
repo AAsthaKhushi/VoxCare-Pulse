@@ -1,356 +1,177 @@
-# VoxCare Pulse - AI-Powered Automotive After-Sales Platform
+## VoxCare Pulse — AI‑Driven After‑Sales Prototype
 
-## 🚀 Quick Start
+VoxCare Pulse is a demonstration-grade prototype that combines real‑time conversational support with predictive vehicle health monitoring. It showcases how a sentiment‑aware chat agent (powered by Google Gemini) can triage user messages, trigger escalations, and surface maintenance recommendations based on simulated OBD‑II data.
 
-### Prerequisites
-- **Node.js** 18+ and npm
-- **PostgreSQL** database (Neon recommended)
-- **Google Gemini API** key
+This README contains detailed setup, development, deployment, and troubleshooting instructions so contributors can run the app locally and understand the architecture.
 
-### Installation
+## Quick Snapshot
+- Purpose: Customer-facing chat and vehicle health diagnostics with an admin dashboard for service centers.
+- Current demo: Frontend deployed to Netlify (static site). Express backend is included but must be hosted separately for API support.
+- Note: For a quick visual demo, overall vehicle health is currently hardcoded to 60% in the frontend.
 
-1. **Clone and install dependencies:**
+## Contents
+- Overview
+- Getting started (dev)
+- Architecture & important files
+- Scripts
+- Deployment (Netlify for frontend)
+- Environment variables
+- Testing
+- Troubleshooting
+- Contributing
+
+---
+
+## Getting started (development)
+
+Prerequisites
+- Node.js 18+ and npm (or pnpm)
+- Optional: PostgreSQL (Neon recommended) if you want persistence
+
+Local install
 ```bash
+# clone
+git clone https://github.com/AAsthaKhushi/VoxCare-Pulse.git
+cd VoxCare-Pulse
+
+# install dependencies
 npm install
 ```
 
-2. **Set up environment variables:**
-```bash
-# Copy the example file
-copy .env.example .env
+Environment
+- Copy the example env file (if you keep local secrets out of the repo):
 
-# Edit .env and add your credentials:
-# - DATABASE_URL: Your PostgreSQL connection string
-# - GEMINI_API_KEY: Your Google Gemini API key
+```bash
+cp .env.example .env    # (Windows: copy .env.example .env)
 ```
 
-3. **Run database migrations:**
-```bash
-npm run db:push
-```
+- Required variables (see "Environment variables" section below).
 
-4. **Seed the database (optional but recommended):**
-```bash
-npm run db:seed
-```
+Run locally
 
-5. **Start the development server:**
 ```bash
 npm run dev
+# open http://localhost:5000
 ```
 
-The app will be available at `http://localhost:5000`
+Database (optional)
+- To use a real Postgres DB:
+    - Set `DATABASE_URL` in `.env`.
+    - Run migrations: `npm run db:push`
+    - Seed sample data (optional): `npm run db:seed`
+
+If `DATABASE_URL` is not set the app uses an in‑memory mock storage for quick testing.
 
 ---
 
-## 📁 Project Structure
+## Architecture & Important Files
 
-```
-voxcare-pulse/
-├── client/                      # React frontend
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── customer/        # Customer-facing UI
-│   │   │   ├── admin/           # Service center dashboard
-│   │   │   ├── shared/          # Reusable components
-│   │   │   └── ui/              # shadcn/ui components
-│   │   ├── pages/               # Route pages
-│   │   ├── hooks/               # Custom React hooks
-│   │   └── lib/                 # Utilities
-│   └── index.html
-│
-├── server/                      # Node.js backend
-│   ├── services/
-│   │   ├── gemini.ts            # AI sentiment analysis
-│   │   ├── predictiveMaintenance.ts  # ML predictions
-│   │   ├── knowledgeBase.ts     # FAQ retrieval
-│   │   └── escalationRouter.ts # Escalation logic
-│   ├── db/
-│   │   ├── index.ts             # Database connection
-│   │   └── seed.ts              # Sample data
-│   ├── routes.ts                # API & WebSocket routes
-│   ├── storage.ts               # Data access layer
-│   └── index.ts                 # Express server
-│
-├── shared/                      # Shared code
-│   ├── schema.ts                # Database schema
-│   └── constants.ts             # Shared constants
-│
-└── migrations/                  # Database migrations
-```
+- client/ — React + TypeScript UI (Vite):
+    - `client/src/pages/CustomerApp.tsx` — main customer page
+    - `client/src/components/customer/VehicleHealthDashboard.tsx` — vehicle health UI
+    - `client/src/components/shared/VehicleHealthCard.tsx` — small health card component
+
+- server/ — Node + Express API and WebSocket (single file server/index.ts)
+    - `server/routes.ts` — API & WS route definitions
+    - `server/storage.ts` — data access layer (DB or mock)
+    - `server/mockStorage.ts` — in‑memory data for local dev (used when DATABASE_URL is missing)
+
+- shared/ — shared schema and types (`shared/schema.ts`)
+
+Notes
+- The Vite build outputs static files under `dist/public`. The repo also bundles a Node server into `dist/index.js` for convenience, but Netlify (static host) will only serve the `dist/public` frontend.
 
 ---
 
-## 🎯 Core Features
+## Scripts
 
-### 1. **Emotion-Aware Chat Interface**
-- Real-time sentiment analysis using Google Gemini AI
-- Adaptive responses based on customer emotion
-- Automatic escalation when frustration detected
-- Multi-language support (English/Hindi)
-
-### 2. **Predictive Maintenance**
-- Vehicle health monitoring with OBD-II data simulation
-- 7-14 day advance warnings for component failures
-- Algorithms for:
-  - Battery degradation
-  - Brake pad wear
-  - Oil change intervals
-  - Tire pressure monitoring
-
-### 3. **Conversational Booking System**
-- Natural language service booking
-- Service center selection with distance
-- Date and time slot picker
-- Cost estimates and confirmations
-
-### 4. **Service Center Dashboard**
-- Real-time chat queue monitoring
-- Sentiment heatmap visualization
-- Fleet health overview
-- Revenue insights and analytics
+Key npm scripts (see `package.json`)
+- `npm run dev` — run dev server (tsx) + Vite frontend
+- `npm run build` — build frontend (Vite) and bundle server (esbuild)
+- `npm start` — run production server from `dist/index.js` (requires Node + built files)
+- `npm run check` — TypeScript typecheck
+- `npm run db:push` — run Drizzle migrations
+- `npm run db:seed` — seed DB
 
 ---
 
-## 🛠️ Technology Stack
+## Deployment
 
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | React 18, TypeScript, Vite |
-| **UI Framework** | shadcn/ui (Radix + Tailwind CSS) |
-| **Backend** | Node.js, Express.js |
-| **Database** | PostgreSQL (Neon serverless) |
-| **ORM** | Drizzle ORM |
-| **Real-time** | WebSocket (ws library) |
-| **AI Engine** | Google Gemini AI (2.5-flash & 2.5-pro) |
-| **State Management** | TanStack Query (React Query) |
-| **Charts** | Recharts |
-| **Routing** | wouter |
+Frontend (Netlify)
+- The Vite frontend is deployed to Netlify. The repo contains a `netlify.toml` configured to build with `npm run build` and publish `dist/public`.
+- The project was deployed via Netlify CLI during setup — the static frontend is available at the configured Netlify site.
 
----
+Backend (APIs)
+- The Express backend cannot run as a long‑lived process on Netlify. Options:
+    1. Host the Node server on a platform that supports Node (Render, Railway, Fly, Heroku) and set the frontend's API base URL to that host.
+ 2. Convert server endpoints into Netlify Functions (serverless) — requires extracting handlers into `/netlify/functions`.
 
-## 📡 API Endpoints
-
-### Chat & Messaging
-- `GET /api/messages/:conversationId` - Get conversation messages
-- `POST /api/messages` - Send message (fallback for non-WebSocket)
-- `WS /ws` - WebSocket connection for real-time chat
-
-### Vehicle Health
-- `GET /api/vehicle-health/:vehicleId` - Get latest health log
-- `GET /api/alerts/:vehicleId` - Get maintenance alerts
-- `PATCH /api/alerts/:alertId` - Update alert status
-
-### Bookings
-- `POST /api/bookings` - Create service booking
-
-### Admin Dashboard
-- `GET /api/admin/metrics` - Dashboard metrics
-- `GET /api/admin/fleet` - Fleet health data
-- `GET /api/admin/sentiment` - Sentiment trends
-- `GET /api/admin/conversations` - Active conversations
-
----
-
-## 🔄 Key Workflows
-
-### Sentiment-Based Conversation Flow
-```
-Customer Message 
-    ↓
-Gemini AI Analysis (sentiment + emotion)
-    ↓
-Check Escalation Triggers
-    ↓
-IF frustrated → Escalate to Human
-ELIF booking intent → Start Booking Flow
-ELIF query → Search Knowledge Base
-ELSE → Generate AI Response
-```
-
-### Predictive Maintenance Flow
-```
-Vehicle Health Data (OBD-II simulation)
-    ↓
-Predictive Algorithms
-    ↓
-Calculate Days Until Failure
-    ↓
-IF < 14 days AND probability > 70%
-    ↓
-Create Maintenance Alert
-    ↓
-Notify Customer (In-app + Chat)
-```
-
----
-
-## 🎨 Emotion-Based Color System
-
-| Emotion | Score Range | Color | Usage |
-|---------|------------|-------|-------|
-| Happy | 0.8 - 1.0 | Green (#10B981) | Positive feedback |
-| Neutral | 0.4 - 0.79 | Blue (#3B82F6) | Standard interactions |
-| Concerned | 0.2 - 0.39 | Yellow (#F59E0B) | Worried customers |
-| Frustrated | 0.0 - 0.19 | Orange (#F97316) | Unhappy customers |
-| Urgent | -1.0 - -0.01 | Red (#EF4444) | Emergency situations |
-
----
-
-## 🗄️ Database Schema
-
-### Core Tables
-- `customers` - Customer profiles
-- `vehicles` - Vehicle information
-- `vehicle_health_logs` - Time-series health data
-- `conversations` - Chat sessions
-- `messages` - Individual messages with sentiment
-- `maintenance_alerts` - Predictive alerts
-- `service_bookings` - Service appointments
-- `knowledge_base` - FAQ database
-
----
-
-## 🧪 Testing the System
-
-### 1. Test Sentiment Analysis
-Send messages with different emotions:
-- "Hi, I need help" → Neutral
-- "This is the THIRD time!!!" → Frustrated (triggers escalation)
-- "Thanks, this is perfect!" → Happy
-
-### 2. Test Predictive Alerts
-Check the Vehicle Health Dashboard to see:
-- Battery health percentage
-- Brake pad thickness warnings
-- Oil change reminders
-- Tire pressure alerts
-
-### 3. Test Booking Flow
-1. Click "Book Service" or say "I want to book a service"
-2. Select service type
-3. Choose service center
-4. Pick date and time
-5. Confirm booking
-
-### 4. Test Admin Dashboard
-Navigate to Service Center Dashboard to view:
-- Active chat queue
-- Sentiment trends (hourly heatmap)
-- Fleet health overview
-- Revenue insights
-
----
-
-## 🚀 Deployment
-
-### Build for Production
+Example: quick production deploy (CLI)
 ```bash
-npm run build
-```
+# one‑time: log in
+npx netlify-cli login
 
-### Start Production Server
-```bash
-npm start
-```
-
----
-
-## 🔐 Environment Variables Reference
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `DATABASE_URL` | PostgreSQL connection string | Yes |
-| `GEMINI_API_KEY` | Google Gemini API key | Yes |
-| `PORT` | Server port (default: 5000) | No |
-| `NODE_ENV` | Environment (development/production) | No |
-
----
-
-## 📝 Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server with hot reload |
-| `npm run build` | Build for production |
-| `npm start` | Start production server |
-| `npm run check` | Run TypeScript type checking |
-| `npm run db:push` | Push database schema changes |
-| `npm run db:seed` | Seed database with sample data |
-
----
-
-## 🎓 Key Concepts
-
-### Sentiment Analysis Engine
-- Uses Google Gemini AI for natural language understanding
-- Fallback to keyword-based analysis if API unavailable
-- Returns score (0-1), emotion label, and confidence
-
-### Predictive Maintenance
-- Linear wear rate calculations for brake pads
-- Age-based battery degradation models
-- Mileage + time-based oil change prediction
-- Real-time tire pressure monitoring
-
-### Escalation Logic
-- Sentiment < 0.2 → Automatic escalation
-- Keywords: "manager", "speak to human", "not helping"
-- Multiple unresolved messages → Escalation
-- Priority levels: urgent, high, medium, low
-
-### Knowledge Base (RAG)
-- Keyword-based search with relevance scoring
-- Categories: vehicle_issues, maintenance, warranty, parts
-- Returns top 3 matches with source attribution
-
----
-
-## 🤝 Contributing
-
-This is a prototype built for demonstration purposes. Key areas for enhancement:
-- Real OBD-II hardware integration
-- Production-grade agent assignment system
-- Advanced ML models for predictions
-- Multi-channel support (WhatsApp, SMS)
-- Mobile app development
-
----
-
-## 📄 License
-
-MIT License - See LICENSE file for details
-
----
-
-## 🆘 Troubleshooting
-
-### Database Connection Issues
-```bash
-# Verify DATABASE_URL is set correctly
-echo %DATABASE_URL%
-
-# Test database connection
-npm run db:push
-```
-
-### Gemini API Errors
-- Ensure `GEMINI_API_KEY` is valid
-- Check API quota limits
-- Fallback keyword analysis will activate automatically
-
-### Port Already in Use
-```bash
-# Change PORT in .env file or:
-set PORT=3000 && npm run dev
+# deploy dist/public to production
+npx netlify deploy --dir=dist/public --prod
 ```
 
 ---
 
-## 📞 Support
+## Environment variables
 
-For questions or issues, please refer to the project documentation or create an issue in the repository.
+Required
+- `DATABASE_URL` — Postgres connection string (if using DB)
+- `GEMINI_API_KEY` — Google Gemini API key (for sentiment/NLU features)
+
+Optional
+- `PORT` — server port (default: 5000)
+- `NODE_ENV` — environment (development/production)
+
+Security note: Do not commit secrets. Keep `.env` in `.gitignore` (this repo already avoids committing `.env`).
 
 ---
 
-**Built with ❤️ for Volkswagen customers**
+## Testing guidance
+
+Manual checks
+- Sentiment analysis: send messages with different tones and observe escalation behavior.
+- Vehicle health: open the Vehicle Health dashboard. (Overall health currently hardcoded to 60% in the demo frontend.)
+
+Automated
+- Add unit tests for services in `server/services` and component tests for key UI components (Jest + React Testing Library recommended).
+
+---
+
+## Troubleshooting
+
+- If builds fail with a PostCSS "from option" warning, ensure PostCSS config and plugin versions are compatible.
+- If the site shows 404s for client routes, the `netlify.toml` includes a redirect to serve `index.html` for SPA routes.
+- If static assets are large, Vite will warn about chunk size — consider code splitting.
+
+---
+
+## Contributing
+
+This is a prototype. If you'd like to contribute:
+1. Fork the repo
+2. Create a feature branch
+3. Open a PR with a clear description and tests for any behavior changes
+
+Suggested small improvements
+- Make overall vehicle health driven by mock data or an environment config (instead of being hardcoded)
+- Add CI: GitHub Actions to run `npm run check` and `npm run build`
+- Add an API integration test that runs against the mock storage
+
+---
+
+## Changelog (quick)
+
+- Hardcoded overall vehicle health to 60% in the frontend for demo purposes.
+- Added `netlify.toml` and deployed the frontend to Netlify.
+
+---
+
+If you'd like, I can also add a short diagram of the architecture, wire up GitHub Actions to build on push, or create a `CONTRIBUTING.md` file with PR guidelines.
+
+**License:** MIT
+
