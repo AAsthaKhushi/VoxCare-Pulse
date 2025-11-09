@@ -34,7 +34,8 @@ export function VehicleHealthDashboard({
     return Math.round((batteryScore + oilScore + brakeScore + tempScore) / 4);
   };
 
-  const overallHealth = calculateOverallHealth();
+  // HARDCODED: force overall vehicle health to 60% as requested
+  const overallHealth = 60;
   const healthColor = overallHealth > 70 ? "text-sentiment-happy" : overallHealth > 40 ? "text-sentiment-concerned" : "text-sentiment-urgent";
   const healthBg = overallHealth > 70 ? "bg-sentiment-happy" : overallHealth > 40 ? "bg-sentiment-concerned" : "bg-sentiment-urgent";
 

@@ -126,3 +126,16 @@ export async function seedDatabase() {
 
   console.log("Database seeded successfully!");
 }
+
+// Run seed if this file is executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  seedDatabase()
+    .then(() => {
+      console.log("✅ Seeding complete!");
+      process.exit(0);
+    })
+    .catch((error) => {
+      console.error("❌ Seeding failed:", error);
+      process.exit(1);
+    });
+}

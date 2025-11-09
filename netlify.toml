@@ -1,0 +1,20 @@
+[build]
+  command = "npm run build"
+  # The Vite build outputs static files under `dist/public` in this project.
+  # Publish the `dist/public` folder so Netlify serves the app's `index.html`.
+  publish = "dist/public"
+
+[dev]
+  command = "npm run dev"
+  # Dev port used by local server (if needed)
+  port = 5000
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Note: This project bundles both client (Vite) and a Node server into `dist`.
+# Netlify can serve the static frontend from `dist`. If you need the Node
+# backend to run, deploy it separately (e.g., Render, Fly, Railway) or
+# convert server routes to Netlify Functions.

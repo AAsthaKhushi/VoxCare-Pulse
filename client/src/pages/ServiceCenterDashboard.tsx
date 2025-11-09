@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 import {
   Sidebar,
   SidebarContent,
@@ -55,6 +56,7 @@ const menuItems = [
 
 export default function ServiceCenterDashboard() {
   const [activeView, setActiveView] = useState("dashboard");
+  const { toast } = useToast();
 
   // Fetch dashboard metrics
   const { data: metrics } = useQuery({

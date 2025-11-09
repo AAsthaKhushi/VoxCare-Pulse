@@ -173,4 +173,18 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+// Use mock storage if no database URL is provided
+let storageInstance: IStorage;
+
+if (process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('user:password@host')) {
+  storageInstance = new DatabaseStorage();
+  console.log("✅ Using PostgreSQL database");
+} else {
+  console.log("⚠️  No database configured - using in-memory mock storage");
+  console.log("   Add DATABASE_URL to .env to use real database");
+  // Import mock storage dynamically
+  const { MockStorage } = await import('./mockStorage.js');
+  storageInstance = new MockStorage();
+}
+
+export const storage = storageInstance;

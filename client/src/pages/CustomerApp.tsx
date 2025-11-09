@@ -115,10 +115,29 @@ export default function CustomerApp() {
 
   return (
     <div className="h-screen flex flex-col bg-background" data-testid="customer-app">
+      {/* Header */}
+      <header className="bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Car className="h-6 w-6" />
+            <div>
+              <h1 className="text-lg font-bold">VoxCare Pulse</h1>
+              <p className="text-xs text-white/80">Customer Portal</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm hidden sm:inline">Rajesh Kumar</span>
+            <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-semibold">
+              RK
+            </div>
+          </div>
+        </div>
+      </header>
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-        <div className="border-b bg-card">
+        <div className="border-b bg-card shadow-sm">
           <div className="max-w-7xl mx-auto px-4">
-            <TabsList className="h-14 w-full justify-start gap-2">
+            <TabsList className="h-14 w-full justify-start gap-2 bg-transparent">
               <TabsTrigger value="chat" className="gap-2" data-testid="tab-chat">
                 <MessageSquare className="h-4 w-4" />
                 Chat

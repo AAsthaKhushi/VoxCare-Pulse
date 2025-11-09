@@ -50,27 +50,36 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background" data-testid="landing-page">
       {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        {/* Background Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-accent -z-10"></div>
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9Ii4xIiBzdHJva2Utd2lkdGg9IjIiLz48L2c+PC9zdmc+')] opacity-10 -z-10"></div>
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+            backgroundSize: '40px 40px'
+          }}></div>
+        </div>
         
-        <div className="max-w-7xl mx-auto px-6 py-24 text-center text-white">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center text-white">
+          <div className="inline-flex items-center justify-center mb-6 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full">
+            <Shield className="h-4 w-4 mr-2" />
+            <span className="text-sm font-medium">Powered by AI & Machine Learning</span>
+          </div>
+          
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight">
             VoxCare Pulse
           </h1>
-          <p className="text-xl md:text-2xl mb-4 text-white/90">
+          <p className="text-xl sm:text-2xl md:text-3xl mb-4 text-white/95 font-medium">
             AI-Powered After-Sales Support for Volkswagen
           </p>
-          <p className="text-lg mb-12 text-white/80 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl mb-12 text-white/80 max-w-3xl mx-auto leading-relaxed">
             Experience emotion-aware customer service with predictive vehicle maintenance. 
             Stay ahead of issues before they become problems.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto">
             <Button 
               size="lg" 
-              className="bg-white text-primary hover:bg-white/90 text-lg px-8 h-14"
+              className="w-full sm:w-auto bg-white text-blue-600 hover:bg-white/90 font-semibold text-base sm:text-lg px-8 h-12 sm:h-14 shadow-xl"
               onClick={() => setLocation("/customer")}
               data-testid="button-customer-app"
             >
@@ -80,7 +89,7 @@ export default function LandingPage() {
             <Button 
               size="lg" 
               variant="outline"
-              className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 h-14"
+              className="w-full sm:w-auto border-2 border-white text-white hover:bg-white/20 font-semibold text-base sm:text-lg px-8 h-12 sm:h-14 backdrop-blur-sm"
               onClick={() => setLocation("/admin")}
               data-testid="button-admin-dashboard"
             >
@@ -91,24 +100,24 @@ export default function LandingPage() {
       </div>
 
       {/* Features Section */}
-      <div className="max-w-7xl mx-auto px-6 py-20">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Powerful Features</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Powerful Features</h2>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
             Everything you need for seamless after-sales support and vehicle maintenance
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
-              <Card key={feature.title} className="p-6 hover-elevate transition-all">
-                <div className="p-3 bg-primary/10 rounded-lg w-fit mb-4">
-                  <Icon className="h-8 w-8 text-primary" />
+              <Card key={feature.title} className="p-6 hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-500/50">
+                <div className="inline-flex p-3 bg-blue-500/10 rounded-xl mb-4">
+                  <Icon className="h-7 w-7 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
+                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
               </Card>
             );
           })}
@@ -116,45 +125,57 @@ export default function LandingPage() {
       </div>
 
       {/* Stats Section */}
-      <div className="bg-muted/30 py-16">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <p className="text-4xl font-bold text-primary mb-2">98%</p>
-              <p className="text-muted-foreground">Customer Satisfaction</p>
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 py-16 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12">
+            <div className="text-center">
+              <p className="text-4xl sm:text-5xl font-bold text-blue-600 mb-2">98%</p>
+              <p className="text-sm sm:text-base text-gray-600 font-medium">Customer Satisfaction</p>
             </div>
-            <div>
-              <p className="text-4xl font-bold text-primary mb-2">75%</p>
-              <p className="text-muted-foreground">AI Auto-Resolved</p>
+            <div className="text-center">
+              <p className="text-4xl sm:text-5xl font-bold text-blue-600 mb-2">75%</p>
+              <p className="text-sm sm:text-base text-gray-600 font-medium">AI Auto-Resolved</p>
             </div>
-            <div>
-              <p className="text-4xl font-bold text-primary mb-2">2.1min</p>
-              <p className="text-muted-foreground">Avg Response Time</p>
+            <div className="text-center">
+              <p className="text-4xl sm:text-5xl font-bold text-blue-600 mb-2">2.1min</p>
+              <p className="text-sm sm:text-base text-gray-600 font-medium">Avg Response Time</p>
             </div>
-            <div>
-              <p className="text-4xl font-bold text-primary mb-2">24/7</p>
-              <p className="text-muted-foreground">Always Available</p>
+            <div className="text-center">
+              <p className="text-4xl sm:text-5xl font-bold text-blue-600 mb-2">24/7</p>
+              <p className="text-sm sm:text-base text-gray-600 font-medium">Always Available</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* CTA Section */}
-      <div className="max-w-7xl mx-auto px-6 py-20 text-center">
-        <h2 className="text-4xl font-bold mb-6">Ready to get started?</h2>
-        <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Experience the future of automotive after-sales support today
-        </p>
-        <Button 
-          size="lg" 
-          className="text-lg px-8 h-14"
-          onClick={() => setLocation("/customer")}
-          data-testid="button-get-started"
-        >
-          Get Started
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 text-center">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">Ready to get started?</h2>
+          <p className="text-base sm:text-lg text-muted-foreground mb-8 leading-relaxed">
+            Experience the future of automotive after-sales support today
+          </p>
+          <Button 
+            size="lg" 
+            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 font-semibold text-base sm:text-lg px-8 sm:px-12 h-12 sm:h-14 shadow-lg"
+            onClick={() => setLocation("/customer")}
+            data-testid="button-get-started"
+          >
+            Get Started
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        </div>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center text-sm text-muted-foreground">
+            <p className="mb-2">© 2025 VoxCare Pulse - Volkswagen After-Sales Support</p>
+            <p className="text-xs">Built with AI & Machine Learning for smarter customer service</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

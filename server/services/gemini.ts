@@ -64,7 +64,7 @@ Respond with JSON in this exact format:
     }
     throw new Error("Empty response from Gemini");
   } catch (error) {
-    console.error("Gemini sentiment analysis error:", error);
+    console.log("ℹ️  Using fallback sentiment analysis (Gemini API unavailable)");
     // Fallback to basic keyword matching
     return fallbackSentimentAnalysis(text);
   }
@@ -119,8 +119,8 @@ ${conversationContext}`;
 
     return result.response.text() || "I'm here to help! How can I assist you today?";
   } catch (error) {
-    console.error("Gemini response generation error:", error);
-    return getFallbackResponse(sentiment.emotion, language);
+    console.log("ℹ️  Using fallback response (Gemini API unavailable)");
+    return getFallbackResponse(sentiment.emotion, language, userMessage);
   }
 }
 
@@ -241,21 +241,55 @@ function fallbackSentimentAnalysis(text: string): SentimentAnalysis {
   return { score: 0.6, emotion: "neutral", confidence: 0.6 };
 }
 
-function getFallbackResponse(emotion: string, language: string): string {
+function getFallbackResponse(emotion: string, language: string, userMessage?: string): string {
+  const lowerMessage = userMessage?.toLowerCase() || "";
+  
+  // Check for specific requests/keywords first
+  if (lowerMessage.includes("rsa") || lowerMessage.includes("roadside")) {
+    return language === "hi" 
+      ? "मैं आपको रोडसाइड असिस्टेंस (RSA) से जोड़ रहा हूँ। कृपया अपना स्थान और समस्या बताएं। हमारी टीम जल्द ही पहुंचेगी। आपातकाल नंबर: 1800-123-4567"
+      : "I'm connecting you to Roadside Assistance (RSA). Please share your location and the issue. Our team will reach you shortly. Emergency hotline: 1800-123-4567";
+  }
+  
+  if (lowerMessage.includes("book") || lowerMessage.includes("appointment") || lowerMessage.includes("schedule")) {
+    return language === "hi"
+      ? "मैं आपकी सर्विस बुकिंग में मदद कर सकता हूँ। कृपया अपनी पसंदीदा तारीख और समय बताएं।"
+      : "I can help you book a service appointment. Please share your preferred date and time.";
+  }
+  
+  if (lowerMessage.includes("battery") || lowerMessage.includes("start")) {
+    return language === "hi"
+      ? "बैटरी की समस्या हो सकती है। क्या आपकी गाड़ी स्टार्ट नहीं हो रही? मैं तुरंत RSA भेज सकता हूँ।"
+      : "This sounds like a battery issue. Is your car not starting? I can dispatch RSA immediately.";
+  }
+  
+  if (lowerMessage.includes("brake") || lowerMessage.includes("noise")) {
+    return language === "hi"
+      ? "ब्रेक की समस्या सुरक्षा के लिए महत्वपूर्ण है। मैं आपके लिए जल्द से जल्द सर्विस अपॉइंटमेंट बुक करता हूँ।"
+      : "Brake issues are critical for safety. Let me book the earliest service appointment for you.";
+  }
+  
+  if (lowerMessage.includes("warranty") || lowerMessage.includes("coverage")) {
+    return language === "hi"
+      ? "आपकी वारंटी की जानकारी के लिए, कृपया अपनी VIN या रजिस्ट्रेशन नंबर शेयर करें।"
+      : "For warranty information, please share your VIN or registration number.";
+  }
+  
+  // Default emotion-based responses
   const responses: Record<string, Record<string, string>> = {
     en: {
-      happy: "I'm glad I could help! Is there anything else you need?",
-      neutral: "I'm here to assist you. What would you like to know?",
-      concerned: "I understand your concern. Let me help you with that.",
-      frustrated: "I apologize for the inconvenience. Let me connect you with a specialist.",
-      urgent: "I understand this is urgent. Let me help you right away.",
+      happy: "I'm glad I could help! Is there anything else you need assistance with?",
+      neutral: "I'm here to assist you with your Volkswagen. How can I help you today?",
+      concerned: "I understand your concern. Let me help you resolve this. What specific issue are you facing?",
+      frustrated: "I sincerely apologize for the inconvenience. Let me connect you with a specialist who can help immediately.",
+      urgent: "I understand this is urgent. I'm prioritizing your request. Please share more details so I can assist you right away.",
     },
     hi: {
-      happy: "मुझे खुशी है कि मैं मदद कर सका! क्या आपको कुछ और चाहिए?",
-      neutral: "मैं आपकी मदद के लिए यहाँ हूँ। आप क्या जानना चाहेंगे?",
-      concerned: "मैं आपकी चिंता समझता हूँ। मैं इसमें आपकी मदद करता हूँ।",
-      frustrated: "असुविधा के लिए मैं क्षमा चाहता हूँ। मैं आपको एक विशेषज्ञ से जोड़ता हूँ।",
-      urgent: "मैं समझता हूँ कि यह जरूरी है। मैं तुरंत आपकी मदद करता हूँ।",
+      happy: "मुझे खुशी है कि मैं मदद कर सका! क्या आपको कुछ और सहायता चाहिए?",
+      neutral: "मैं आपकी Volkswagen के लिए यहाँ हूँ। आज मैं आपकी कैसे मदद कर सकता हूँ?",
+      concerned: "मैं आपकी चिंता समझता हूँ। इसे हल करने में मैं आपकी मदद करूंगा। आपको क्या समस्या है?",
+      frustrated: "असुविधा के लिए मैं ईमानदारी से क्षमा चाहता हूँ। मैं आपको तुरंत एक विशेषज्ञ से जोड़ता हूँ।",
+      urgent: "मैं समझता हूँ कि यह आवश्यक है। मैं आपके अनुरोध को प्राथमिकता दे रहा हूँ। कृपया और विवरण साझा करें।",
     },
   };
 
